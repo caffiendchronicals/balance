@@ -7,7 +7,7 @@ import pandas as pd
 
 st.set_page_config(page_title="Balance Wheel", layout="centered")
 
-st.title("🌐 Life Balance")
+st.title("Life Balance")
 st.write("Adjust the sliders below to rate each area (0 = very low, 10 = very high).")
 st.write("You can also add notes for each area.")
 
