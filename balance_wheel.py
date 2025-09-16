@@ -51,7 +51,7 @@ st.markdown("""
 
     /* Slider thumb */
     .stSlider [role="slider"] {
-        background-color: #6c63ff;  /* purple thumb */
+        background-color: #888888;  /* grey thumb */
         border: 2px solid #ffffff;  /* white border for contrast */
         height: 20px;
         width: 20px;
