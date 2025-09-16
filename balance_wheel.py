@@ -7,12 +7,71 @@ import pandas as pd
 
 st.set_page_config(page_title="Balance Wheel", layout="centered")
 
+# -----------------------
+# Step 1: App-wide CSS (paste after imports & set_page_config)
+# -----------------------
+st.markdown("""
+    <style>
+    /* Global background and text */
+    .main {
+        background-color: #1e1e1e; /* dark gray background */
+        color: #f0f0f0; /* light text */
+    }
+
+    /* Cards */
+    .card {
+        background-color: #2a2a2a; /* slightly lighter dark gray */
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+
+    /* Titles inside cards */
+    .cat-title {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #ffffff; /* pure white for contrast */
+    }
+
+    /* General text */
+    .card, .card * {
+        color: #f0f0f0 !important; /* force light text */
+    }
+    </style>
+""", unsafe_allow_html=True)
+st.markdown("""
+    <style>
+    /* Slider track */
+    .stSlider > div[data-baseweb="slider"] {
+        background: #333333;  /* dark gray track */
+        border-radius: 8px;
+    }
+
+    /* Slider thumb */
+    .stSlider [role="slider"] {
+        background-color: #6c63ff;  /* purple thumb */
+        border: 2px solid #ffffff;  /* white border for contrast */
+        height: 20px;
+        width: 20px;
+        border-radius: 50%;
+    }
+
+    /* Active (when dragging) */
+    .stSlider [role="slider"]:focus {
+        box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.4);
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+
 st.title("Life Balance")
 st.write("Adjust the sliders below to rate each area (0 = very low, 10 = very high).")
 st.write("You can also add notes for each area.")
 
 # File to store history
-DATA_FILE = "data.json"
+DATA_FILE = "balance_wheel_history.json"
 
 # Your custom categories
 categories = ["Physical", "Emotional", "Professional", "Creativity", "Financial", "Adventures"]
@@ -40,7 +99,7 @@ if os.path.exists(DATA_FILE):
 if history:
     selected_time = st.selectbox(
         "📜 View past entries",
-        ["(Current Input)"] + list(history.keys())[::-1]  # newest first
+        ["(Current Input)"] + list(history.keys())[::-1]  # newest first    
     )
 else:
     selected_time = "(Current Input)"
@@ -60,10 +119,19 @@ else:
     for cat in categories:
         default_rating = latest_data.get(cat, {}).get("rating", 5)
         default_note = latest_data.get(cat, {}).get("note", "")
-        rating = st.slider(cat, 0, 10, default_rating)
+
+        # Card wrapper (using CSS from Step 1)
+        st.markdown('<div class="card">', unsafe_allow_html=True)
+
+        st.markdown(f"<div class='cat-title'>{cat}</div>", unsafe_allow_html=True)
+        rating = st.slider(f"{cat} rating", 0, 10, default_rating, key=f"slider_{cat}")
         note = st.text_area(f"Notes for {cat}", default_note, key=f"note_{cat}")
+
+        st.markdown('</div>', unsafe_allow_html=True)  # close card
+
         ratings.append(rating)
         notes[cat] = note
+
 
 # --- Pie chart with consistent colors and highlights ---
 fig, ax = plt.subplots(figsize=(6, 6))
