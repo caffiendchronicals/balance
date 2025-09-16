@@ -8,7 +8,7 @@ import pandas as pd
 st.set_page_config(page_title="Balance Wheel", layout="centered")
 
 # -----------------------
-# Step 1: App-wide CSS (paste after imports & set_page_config)
+# Step 1: App-wide CSS
 # -----------------------
 st.markdown("""
     <style>
@@ -22,9 +22,10 @@ st.markdown("""
     .card {
         background-color: #2a2a2a; /* slightly lighter dark gray */
         border-radius: 12px;
-        padding: 20px;
-        margin-bottom: 20px;
+        padding: 15px !important;   /* tighter padding */
+        margin-bottom: 10px !important; /* slimmer spacing */
         box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        border-bottom: 1px solid #ffffff; /* subtle divider line */
     }
 
     /* Titles inside cards */
@@ -39,10 +40,7 @@ st.markdown("""
     .card, .card * {
         color: #f0f0f0 !important; /* force light text */
     }
-    </style>
-""", unsafe_allow_html=True)
-st.markdown("""
-    <style>
+
     /* Slider track */
     .stSlider > div[data-baseweb="slider"] {
         background: #333333;  /* dark gray track */
@@ -62,9 +60,20 @@ st.markdown("""
     .stSlider [role="slider"]:focus {
         box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.4);
     }
+
+    /* Slimmer general block container (applies globally) */
+    .block-container {
+        padding-top: 0.25rem !important;
+        padding-bottom: 0.25rem !important;
+    }
+
+    /* Reduce margin around sliders and text areas */
+    .stSlider, .stTextArea {
+        margin-top: 0.3rem !important;
+        margin-bottom: 0.3rem !important;
+    }
     </style>
 """, unsafe_allow_html=True)
-
 
 st.title("Life Balance")
 st.write("Adjust the sliders below to rate each area (0 = very low, 10 = very high).")
@@ -131,7 +140,6 @@ else:
 
         ratings.append(rating)
         notes[cat] = note
-
 
 # --- Pie chart with consistent colors and highlights ---
 fig, ax = plt.subplots(figsize=(6, 6))
@@ -213,7 +221,6 @@ if uploaded:
         st.session_state.refresh_flag = not st.session_state.get("refresh_flag", False)
     except Exception as e:
         st.error("Failed to import JSON: " + str(e))
-
 
 # --- Manage Saves Section with Automatic Refresh ---
 st.subheader("⚙️ Manage Saved Progress")
